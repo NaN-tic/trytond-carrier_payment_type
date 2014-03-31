@@ -1,0 +1,59 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:carrier,payment_types:"
+msgid "Payment Types"
+msgstr "Tipos de pago"
+
+msgctxt "field:carrier.payment.type,carrier:"
+msgid "Carrier"
+msgstr "Transportista"
+
+msgctxt "field:carrier.payment.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:carrier.payment.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:carrier.payment.type,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:carrier.payment.type,operation:"
+msgid "Operation"
+msgstr "Operación"
+
+msgctxt "field:carrier.payment.type,payment_type:"
+msgid "Payment Type"
+msgstr "Tipo de pago"
+
+msgctxt "field:carrier.payment.type,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:carrier.payment.type,value:"
+msgid "Value"
+msgstr "Valor"
+
+msgctxt "field:carrier.payment.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:carrier.payment.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "model:carrier.payment.type,name:"
+msgid "Carrier Payment Type"
+msgstr "Tipo de pago y transportista"
+
+msgctxt "selection:carrier.payment.type,operation:"
+msgid "Percentage (%)"
+msgstr "Porcentage (%)"
+
+msgctxt "selection:carrier.payment.type,operation:"
+msgid "Sum (+)"
+msgstr "Sumar (+)"
