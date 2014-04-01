@@ -7,4 +7,5 @@ copyright notices and license terms. -->
     <field name="payment_type"/>
     <field name="operation"/>
     <field name="value"/>
+    <field name="formula"/>
 </tree>

@@ -12,4 +12,6 @@ copyright notices and license terms. -->
     <field name="operation"/>
     <label name="value"/>
     <field name="value"/>
+    <label name="formula"/>
+    <field name="formula"/>
 </form>
