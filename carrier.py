@@ -53,7 +53,7 @@ class CarrierPaymentType(ModelSQL, ModelView):
     sum_carrier_price = fields.Boolean('Sum Carrier Price')
     operation = fields.Selection([
             ('percentage', 'Percentage (%)'),
-            ('sum', 'Sum (+)'),
+            ('fix', 'Fix'),
             ('formula', 'Formula'),
             ], 'Operation')
     value = fields.Numeric('Value', digits=(16, 2),
@@ -96,7 +96,7 @@ class Carrier:
             price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
-                    if payment_type.operation == 'sum':
+                    if payment_type.operation == 'fix':
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
@@ -120,7 +120,7 @@ class Carrier:
             price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
-                    if payment_type.operation == 'sum':
+                    if payment_type.operation == 'fix':
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
