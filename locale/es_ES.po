@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:carrier:"
+msgid "Invalid carrier payment type formula \"%s\"."
+msgstr "La fórmula del tipo de pago del transporte no es correcta \"%s\"."
+
 msgctxt "field:carrier,payment_types:"
 msgid "Payment Types"
 msgstr "Tipos de pago"
@@ -17,6 +21,10 @@ msgstr "Fecha creación"
 msgctxt "field:carrier.payment.type,create_uid:"
 msgid "Create User"
 msgstr "Usuario creación"
+
+msgctxt "field:carrier.payment.type,formula:"
+msgid "Formula"
+msgstr "Fórmula"
 
 msgctxt "field:carrier.payment.type,id:"
 msgid "ID"
@@ -34,6 +42,10 @@ msgctxt "field:carrier.payment.type,rec_name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:carrier.payment.type,sum_carrier_price:"
+msgid "Sum Carrier Price"
+msgstr "Sumar precio transporte"
+
 msgctxt "field:carrier.payment.type,value:"
 msgid "Value"
 msgstr "Valor"
@@ -46,9 +58,25 @@ msgctxt "field:carrier.payment.type,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "help:carrier.payment.type,formula:"
+msgid ""
+"Python expression that will be evaluated and sum. Eg:\n"
+"0.10*(record.untaxed_amount)"
+msgstr ""
+"Expresión de Python que se evaluará. Eg:\n"
+"0.10*(record.untaxed_amount)"
+
 msgctxt "model:carrier.payment.type,name:"
 msgid "Carrier Payment Type"
 msgstr "Tipo de pago y transportista"
+
+msgctxt "selection:carrier.payment.type,operation:"
+msgid "Fix"
+msgstr "Fijo"
+
+msgctxt "selection:carrier.payment.type,operation:"
+msgid "Formula"
+msgstr "Fórmula"
 
 msgctxt "selection:carrier.payment.type,operation:"
 msgid "Percentage (%)"
