@@ -50,6 +50,7 @@ class CarrierPaymentType(ModelSQL, ModelView):
     payment_type = fields.Many2One('account.payment.type', 'Payment Type',
             required=True)
     carrier = fields.Many2One('carrier', 'Carrier', required=True)
+    sum_carrier_price = fields.Boolean('Sum Carrier Price')
     operation = fields.Selection([
             ('percentage', 'Percentage (%)'),
             ('sum', 'Sum (+)'),
@@ -65,6 +66,10 @@ class CarrierPaymentType(ModelSQL, ModelView):
                 'required': Eval('operation') == 'formula',
             }, help=('Python expression that will be evaluated and sum. Eg:\n'
             '0.10*(record.untaxed_amount)'))
+
+    @staticmethod
+    def default_sum_carrier_price():
+        return True
 
     @staticmethod
     def default_operation():
@@ -88,33 +93,46 @@ class Carrier:
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
         if record:
+            price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
                     if payment_type.operation == 'sum':
-                        price += payment_type.value
+                        price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
-                            price += safe_eval(decistmt(payment_type.formula), Transaction().context)
+                            price_payment = safe_eval(decistmt(payment_type.formula), Transaction().context)
                         except:
                             self.raise_user_error('error_formula', (payment_type.formula,))
                     else:
-                        price = price * (1 + payment_type.value / 100)
+                        price_payment = price * (1 + payment_type.value / 100)
+
+                    if payment_type.sum_carrier_price:
+                        price += price_payment
+                    else:
+                        price = price_payment
+                    break
         return price, currency_id
 
     def get_purchase_price(self):
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
         if record:
+            price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
                     if payment_type.operation == 'sum':
-                        price += payment_type.value
+                        price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
-                            price += safe_eval(decistmt(payment_type.formula), Transaction().context)
+                            price_payment = safe_eval(decistmt(payment_type.formula), Transaction().context)
                         except:
                             self.raise_user_error('error_formula', (payment_type.formula,))
                     else:
-                        price = price * (1 + payment_type.value / 100)
-        return price, currency_id
+                        price_payment = price * (1 + payment_type.value / 100)
 
+                    if payment_type.sum_carrier_price:
+                        price += price_payment
+                    else:
+                        price = price_payment
+                    break
+        return price, currency_id

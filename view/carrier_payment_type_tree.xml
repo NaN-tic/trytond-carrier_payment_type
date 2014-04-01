@@ -5,6 +5,7 @@ copyright notices and license terms. -->
 <tree string="Carrier Formula Price Lists">
     <field name="carrier"/>
     <field name="payment_type"/>
+    <field name="sum_carrier_price"/>
     <field name="operation"/>
     <field name="value"/>
     <field name="formula"/>

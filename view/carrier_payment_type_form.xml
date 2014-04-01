@@ -14,4 +14,6 @@ copyright notices and license terms. -->
     <field name="value"/>
     <label name="formula"/>
     <field name="formula"/>
+    <label name="sum_carrier_price"/>
+    <field name="sum_carrier_price"/>
 </form>
