@@ -8,6 +8,9 @@ del envío.
 
 Las operaciones permitidas son:
 
-* Sumar. Sumar o restar un valor fijo.
-* Porcentage. Sumar o restar un porcentaje del precio del coste de envío.
-* Formula. Sumar o restar una operación con los datos del pedido: 0.10*(record.untaxed_amount)
+* Fijo.
+* Porcentage. Un porcentaje del precio del coste de envío.
+* Formula. Expressión Python con los datos del pedido: 0.10*(record.untaxed_amount)
+
+El precio calculado según el tipo de pago se sumará o será fijo respeto el precio del transporte
+si se marca la opción "Sumar precio transporte".
