@@ -15,10 +15,10 @@ class Sale:
         super(Sale, cls).__setup__()
         for fname in ('carrier', 'payment_type'):
             if fname not in cls.lines.on_change:
-                cls.lines.on_change.append(fname)
+                cls.lines.on_change.add(fname)
         for fname in cls.lines.on_change:
             if fname not in cls.carrier.on_change:
-                cls.carrier.on_change.append(fname)
+                cls.carrier.on_change.add(fname)
 
     def _get_carrier_context(self):
         context = super(Sale, self)._get_carrier_context()
