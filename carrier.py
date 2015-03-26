@@ -93,6 +93,8 @@ class Carrier:
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
         if record:
+            if not record.carrier:
+                return price, currency_id
             price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
@@ -117,6 +119,8 @@ class Carrier:
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
         if record:
+            if not record.carrier:
+                return price, currency_id
             price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
