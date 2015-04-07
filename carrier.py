@@ -113,6 +113,7 @@ class Carrier:
                     else:
                         price = price_payment
                     break
+        price = self.round_price_formula(price, self.formula_currency_digits)
         return price, currency_id
 
     def get_purchase_price(self):
