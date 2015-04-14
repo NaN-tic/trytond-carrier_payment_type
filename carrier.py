@@ -3,12 +3,13 @@
 # copyright notices and license terms.
 import tokenize
 from StringIO import StringIO
-
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.tools import safe_eval
+from trytond.config import config as config_
+DIGITS = int(config_.get('digits', 'unit_price_digits', 4))
 
 __all__ = ['CarrierPaymentType', 'Carrier']
 __metaclass__ = PoolMeta
@@ -56,7 +57,7 @@ class CarrierPaymentType(ModelSQL, ModelView):
             ('fix', 'Fix'),
             ('formula', 'Formula'),
             ], 'Operation')
-    value = fields.Numeric('Value', digits=(16, 2),
+    value = fields.Numeric('Value', digits=(16, DIGITS),
             states={
                 'invisible': Eval('operation') == 'formula',
                 'required': Eval('operation') != 'formula',
