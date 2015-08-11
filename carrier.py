@@ -3,16 +3,17 @@
 # copyright notices and license terms.
 import tokenize
 from StringIO import StringIO
+from simpleeval import simple_eval
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import Eval
-from trytond.tools import safe_eval
 from trytond.config import config as config_
-DIGITS = int(config_.get('digits', 'unit_price_digits', 4))
 
 __all__ = ['CarrierPaymentType', 'Carrier']
 __metaclass__ = PoolMeta
+
+DIGITS = config_.getint('product', 'price_decimal', default=4)
 
 # code snippet taken from http://docs.python.org/library/tokenize.html
 def decistmt(s):
@@ -103,7 +104,7 @@ class Carrier:
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
-                            price_payment = safe_eval(decistmt(payment_type.formula), Transaction().context)
+                            price_payment = simple_eval(decistmt(payment_type.formula), Transaction().context)
                         except:
                             self.raise_user_error('error_formula', (payment_type.formula,))
                     else:
@@ -130,7 +131,7 @@ class Carrier:
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
-                            price_payment = safe_eval(decistmt(payment_type.formula), Transaction().context)
+                            price_payment = simple_eval(decistmt(payment_type.formula), Transaction().context)
                         except:
                             self.raise_user_error('error_formula', (payment_type.formula,))
                     else:
