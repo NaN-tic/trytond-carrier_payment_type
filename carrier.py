@@ -1,49 +1,19 @@
 # This file is part of the carrier_payment_type module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
-import tokenize
-from StringIO import StringIO
+from decimal import Decimal
 from simpleeval import simple_eval
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.config import config as config_
+from trytond.tools import decistmt
 
 __all__ = ['CarrierPaymentType', 'Carrier']
 __metaclass__ = PoolMeta
 
 DIGITS = config_.getint('product', 'price_decimal', default=4)
-
-# code snippet taken from http://docs.python.org/library/tokenize.html
-def decistmt(s):
-    """Substitute Decimals for floats in a string of statements.
-
-    >>> from decimal import Decimal
-    >>> s = 'print +21.3e-5*-.1234/81.7'
-    >>> decistmt(s)
-    "print +Decimal ('21.3e-5')*-Decimal ('.1234')/Decimal ('81.7')"
-
-    >>> exec(s)
-    -3.21716034272e-007
-    >>> exec(decistmt(s))
-    -3.217160342717258261933904529E-7
-    """
-    result = []
-    # tokenize the string
-    g = tokenize.generate_tokens(StringIO(s).readline)
-    for toknum, tokval, _, _, _ in g:
-        # replace NUMBER tokens
-        if toknum == tokenize.NUMBER and '.' in tokval:
-            result.extend([
-                (tokenize.NAME, 'Decimal'),
-                (tokenize.OP, '('),
-                (tokenize.STRING, repr(tokval)),
-                (tokenize.OP, ')')
-            ])
-        else:
-            result.append((toknum, tokval))
-    return tokenize.untokenize(result)
 
 
 class CarrierPaymentType(ModelSQL, ModelView):
@@ -67,7 +37,7 @@ class CarrierPaymentType(ModelSQL, ModelView):
                 'invisible': Eval('operation') != 'formula',
                 'required': Eval('operation') == 'formula',
             }, help=('Python expression that will be evaluated and sum. Eg:\n'
-            '0.10*(record.untaxed_amount)'))
+            '0.10 * getattr(record, "untaxed_amount")'))
 
     @staticmethod
     def default_sum_carrier_price():
@@ -91,12 +61,19 @@ class Carrier:
                     '"%s".'),
                 })
 
+    def compute_formula_payment_price(self, formula, record):
+        "Compute price based on payment formula"
+        context = self.get_context_formula(record)
+        return simple_eval(decistmt(formula), **context) or Decimal(0)
+
     def get_sale_price(self):
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
-        if record:
+
+        if record and record.__name__ == 'sale.sale':
             if not record.carrier:
                 return price, currency_id
+
             price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
@@ -104,9 +81,11 @@ class Carrier:
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
-                            price_payment = simple_eval(decistmt(payment_type.formula), Transaction().context)
+                            price_payment = self.compute_formula_payment_price(
+                                    payment_type.formula, record)
                         except:
-                            self.raise_user_error('error_formula', (payment_type.formula,))
+                            self.raise_user_error('error_formula', (
+                                    payment_type.formula,))
                     else:
                         price_payment = price * (1 + payment_type.value / 100)
 
@@ -115,15 +94,18 @@ class Carrier:
                     else:
                         price = price_payment
                     break
+
         price = self.round_price_formula(price, self.formula_currency_digits)
         return price, currency_id
 
     def get_purchase_price(self):
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
-        if record:
+
+        if record and record.__name__ == 'purchase.purchase':
             if not record.carrier:
                 return price, currency_id
+
             price_payment = 0
             for payment_type in record.carrier.payment_types:
                 if record.payment_type == payment_type.payment_type:
@@ -131,9 +113,11 @@ class Carrier:
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
-                            price_payment = simple_eval(decistmt(payment_type.formula), Transaction().context)
+                            price_payment = self.compute_formula_payment_price(
+                                    payment_type.formula, record)
                         except:
-                            self.raise_user_error('error_formula', (payment_type.formula,))
+                            self.raise_user_error('error_formula', (
+                                    payment_type.formula,))
                     else:
                         price_payment = price * (1 + payment_type.value / 100)
 
@@ -142,4 +126,6 @@ class Carrier:
                     else:
                         price = price_payment
                     break
+
+        price = self.round_price_formula(price, self.formula_currency_digits)
         return price, currency_id
