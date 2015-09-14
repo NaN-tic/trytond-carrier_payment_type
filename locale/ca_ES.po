@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
@@ -61,10 +61,10 @@ msgstr "Usuari modificació"
 msgctxt "help:carrier.payment.type,formula:"
 msgid ""
 "Python expression that will be evaluated and sum. Eg:\n"
-"0.10*(record.untaxed_amount)"
+"0.10 * getattr(record, \"untaxed_amount\")"
 msgstr ""
 "Expressió de Python que s'evaluarà. Eg:\n"
-"0.10*(record.untaxed_amount)"
+"0.10 * getattr(record, \"untaxed_amount\")"
 
 msgctxt "model:carrier.payment.type,name:"
 msgid "Carrier Payment Type"
@@ -81,10 +81,6 @@ msgstr "Fòrmula"
 msgctxt "selection:carrier.payment.type,operation:"
 msgid "Percentage (%)"
 msgstr "Percentatge (%)"
-
-msgctxt "selection:carrier.payment.type,operation:"
-msgid "Sum (+)"
-msgstr "Suma (+)"
 
 msgctxt "view:carrier.payment.type:"
 msgid "Carrier Formula Price List"
