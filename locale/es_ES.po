@@ -28,7 +28,7 @@ msgstr "Fórmula"
 
 msgctxt "field:carrier.payment.type,id:"
 msgid "ID"
-msgstr "Identificador"
+msgstr "ID"
 
 msgctxt "field:carrier.payment.type,operation:"
 msgid "Operation"
@@ -85,3 +85,11 @@ msgstr "Porcentage (%)"
 msgctxt "selection:carrier.payment.type,operation:"
 msgid "Sum (+)"
 msgstr "Sumar (+)"
+
+msgctxt "view:carrier.payment.type:"
+msgid "Carrier Formula Price List"
+msgstr "Cálculo tarifa transportista"
+
+msgctxt "view:carrier.payment.type:"
+msgid "Carrier Formula Price Lists"
+msgstr "Cálculos tarifa transportista"

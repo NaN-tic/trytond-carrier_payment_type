@@ -85,3 +85,11 @@ msgstr "Percentatge (%)"
 msgctxt "selection:carrier.payment.type,operation:"
 msgid "Sum (+)"
 msgstr "Suma (+)"
+
+msgctxt "view:carrier.payment.type:"
+msgid "Carrier Formula Price List"
+msgstr "Tarifa transportista amb formula"
+
+msgctxt "view:carrier.payment.type:"
+msgid "Carrier Formula Price Lists"
+msgstr "Càlculs tarifa transportista"
