@@ -11,7 +11,6 @@ from trytond.config import config as config_
 from trytond.tools import decistmt
 
 __all__ = ['CarrierPaymentType', 'Carrier']
-__metaclass__ = PoolMeta
 
 DIGITS = config_.getint('product', 'price_decimal', default=4)
 
@@ -49,6 +48,7 @@ class CarrierPaymentType(ModelSQL, ModelView):
 
 
 class Carrier:
+    __metaclass__ = PoolMeta
     __name__ = 'carrier'
     payment_types = fields.One2Many('carrier.payment.type', 'carrier',
         'Payment Types')
