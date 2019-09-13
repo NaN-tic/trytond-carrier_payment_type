@@ -6,8 +6,7 @@ from trytond.pool import PoolMeta
 __all__ = ['Sale']
 
 
-class Sale:
-    __metaclass__ = PoolMeta
+class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
 
     @classmethod
@@ -16,9 +15,10 @@ class Sale:
         for fname in ('carrier', 'payment_type'):
             if fname not in cls.lines.on_change:
                 cls.lines.on_change.add(fname)
-        for fname in cls.lines.on_change:
-            if fname not in cls.carrier.on_change:
-                cls.carrier.on_change.add(fname)
+        # TODO
+        # for fname in cls.lines.on_change:
+        #     if fname not in cls.carrier.on_change:
+        #         cls.carrier.on_change.add(fname)
 
     def _get_carrier_context(self):
         context = super(Sale, self)._get_carrier_context()

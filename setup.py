@@ -7,18 +7,25 @@ from setuptools import setup
 import re
 import os
 import io
-try:
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
-MODULE2PREFIX = {}
+MODULE = 'carrier_payment_type'
+PREFIX = 'trytonzz'
+MODULE2PREFIX = {
+    'stock_origin': 'trytonzz',
+    'stock_origin_sale': 'trytonzz',
+    'account_payment_type': 'trytonspain',
+    'carrier_formula': 'trytonzz',
+    'carrier_payment_type': 'trytonzz',
+    'sale_carrier':'trytonspain',
+}
 
 
 def read(fname):
     return io.open(
         os.path.join(os.path.dirname(__file__), fname),
         'r', encoding='utf-8').read()
+
 
 def get_require_version(name):
     if minor_version % 2:
@@ -39,8 +46,6 @@ version = info.get('version', '0.0.1')
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
-name = 'trytonzz_carrier_payment_type'
-download_url = 'https://bitbucket.org/zikzakmedia/trytond-carrier_payment_type'
 
 requires = []
 for dep in info.get('depends', []):
@@ -50,27 +55,69 @@ for dep in info.get('depends', []):
 requires.append(get_require_version('trytond'))
 
 tests_require = []
-dependency_links = []
+series = '%s.%s' % (major_version, minor_version)
+if minor_version % 2:
+    branch = 'default'
+else:
+    branch = series
+dependency_links = [
+    ('hg+https://bitbucket.org/zikzakmedia/'
+        'trytond-carrier_formula@%(branch)s'
+        '#egg=trytonzz-carrier_formula-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ('hg+https://bitbucket.org/trytonspain/'
+        'trytond-sale_carrier@%(branch)s'
+        '#egg=trytonspain-sale_carrier-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ('hg+https://bitbucket.org/trytonspain/'
+        'trytond-account_payment_type@%(branch)s'
+        '#egg=trytonspain-account_payment_type-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ('hg+https://bitbucket.org/zikzakmedia/'
+        'trytond-stock_origin@%(branch)s'
+        '#egg=trytonzz-stock_origin-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ('hg+https://bitbucket.org/zikzakmedia/'
+        'trytond-stock_origin_sale@%(branch)s'
+        '#egg=trytonzz-stock_origin_sale-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ('hg+https://bitbucket.org/zikzakmedia/'
+        'trytond-carrier_payment_type@%(branch)s'
+        '#egg=trytonzz-carrier_payment_type-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ]
 if minor_version % 2:
     # Add development index for testing with proteus
     dependency_links.append('https://trydevpi.tryton.org/')
 
-setup(name=name,
+setup(name='%s_%s' % (PREFIX, MODULE),
     version=version,
-    description='Tryton Carrier Payment Type Module',
+    description='Tryton Account Payment Gateway Sale Module',
     long_description=read('README'),
     author='Zikzakmedia SL',
     author_email='zikzak@zikzakmedia.com',
     url='https://bitbucket.org/zikzakmedia/',
-    download_url=download_url,
+    download_url='https://bitbucket.org/zikzakmedia/trytond-%s' % MODULE,
     keywords='',
-    package_dir={'trytond.modules.carrier_payment_type': '.'},
+    package_dir={'trytond.modules.%s' % MODULE: '.'},
     packages=[
-        'trytond.modules.carrier_payment_type',
-        'trytond.modules.carrier_payment_type.tests',
+        'trytond.modules.%s' % MODULE,
+        'trytond.modules.%s.tests' % MODULE,
         ],
     package_data={
-        'trytond.modules.carrier_payment_type': (info.get('xml', [])
+        'trytond.modules.%s' % MODULE: (info.get('xml', [])
             + ['tryton.cfg', 'view/*.xml', 'locale/*.po', '*.odt',
                 'icons/*.svg', 'tests/*.rst']),
         },
@@ -97,9 +144,9 @@ setup(name=name,
         'Natural Language :: Spanish',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Office/Business',
@@ -110,8 +157,8 @@ setup(name=name,
     zip_safe=False,
     entry_points="""
     [trytond.modules]
-    carrier_payment_type = trytond.modules.carrier_payment_type
-    """,
+    %s = trytond.modules.%s
+    """ % (MODULE, MODULE),
     test_suite='tests',
     test_loader='trytond.test_loader:Loader',
     tests_require=tests_require,

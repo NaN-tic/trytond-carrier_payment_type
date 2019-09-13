@@ -9,6 +9,8 @@ from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.config import config as config_
 from trytond.tools import decistmt
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['CarrierPaymentType', 'Carrier']
 
@@ -47,19 +49,10 @@ class CarrierPaymentType(ModelSQL, ModelView):
         return 'percentage'
 
 
-class Carrier:
-    __metaclass__ = PoolMeta
+class Carrier(metaclass=PoolMeta):
     __name__ = 'carrier'
     payment_types = fields.One2Many('carrier.payment.type', 'carrier',
         'Payment Types')
-
-    @classmethod
-    def __setup__(cls):
-        super(Carrier, cls).__setup__()
-        cls._error_messages.update({
-                'error_formula': ('Invalid carrier payment type formula '
-                    '"%s".'),
-                })
 
     def compute_formula_payment_price(self, formula, record):
         "Compute price based on payment formula"
@@ -84,8 +77,9 @@ class Carrier:
                             price_payment = self.compute_formula_payment_price(
                                     payment_type.formula, record)
                         except:
-                            self.raise_user_error('error_formula', (
-                                    payment_type.formula,))
+                            raise UserError(gettext(
+                                'carrier_payment_type.rror_formula',
+                                    formula=payment_type.formula))
                     else:
                         price_payment = price * (1 + payment_type.value / 100)
 
