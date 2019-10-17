@@ -2,10 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:carrier:"
-msgid "Invalid carrier payment type formula \"%s\"."
-msgstr "La fórmula del tipo de pago del transporte no es correcta \"%s\"."
-
 msgctxt "field:carrier,payment_types:"
 msgid "Payment Types"
 msgstr "Tipos de pago"
@@ -14,21 +10,9 @@ msgctxt "field:carrier.payment.type,carrier:"
 msgid "Carrier"
 msgstr "Transportista"
 
-msgctxt "field:carrier.payment.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:carrier.payment.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:carrier.payment.type,formula:"
 msgid "Formula"
 msgstr "Fórmula"
-
-msgctxt "field:carrier.payment.type,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:carrier.payment.type,operation:"
 msgid "Operation"
@@ -38,10 +22,6 @@ msgctxt "field:carrier.payment.type,payment_type:"
 msgid "Payment Type"
 msgstr "Tipo de pago"
 
-msgctxt "field:carrier.payment.type,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:carrier.payment.type,sum_carrier_price:"
 msgid "Sum Carrier Price"
 msgstr "Sumar precio transporte"
@@ -49,14 +29,6 @@ msgstr "Sumar precio transporte"
 msgctxt "field:carrier.payment.type,value:"
 msgid "Value"
 msgstr "Valor"
-
-msgctxt "field:carrier.payment.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:carrier.payment.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "help:carrier.payment.type,formula:"
 msgid ""
@@ -69,6 +41,10 @@ msgstr ""
 msgctxt "model:carrier.payment.type,name:"
 msgid "Carrier Payment Type"
 msgstr "Tipo de pago y transportista"
+
+msgctxt "model:ir.message,text:error_formula"
+msgid "Invalid carrier payment type formula \"%(formula)s\"."
+msgstr ""
 
 msgctxt "selection:carrier.payment.type,operation:"
 msgid "Fix"
