@@ -4,7 +4,7 @@
 from decimal import Decimal
 from simpleeval import simple_eval
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.config import config as config_
@@ -62,20 +62,25 @@ class Carrier(metaclass=PoolMeta):
     def get_sale_price(self):
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
+        if not record:
+            return None, None
 
-        if record and record.__name__ == 'sale.sale':
-            if not record.carrier:
+        model, id = record.split(',')
+        if model == 'sale.sale':
+            Sale = Pool().get('sale.sale')
+            sale = Sale(int(id))
+            if not sale.carrier:
                 return price, currency_id
 
             price_payment = 0
-            for payment_type in record.carrier.payment_types:
-                if record.payment_type == payment_type.payment_type:
+            for payment_type in sale.carrier.payment_types:
+                if sale.payment_type == payment_type.payment_type:
                     if payment_type.operation == 'fix':
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
                             price_payment = self.compute_formula_payment_price(
-                                    payment_type.formula, record)
+                                    payment_type.formula, sale)
                         except:
                             raise UserError(gettext(
                                 'carrier_payment_type.rror_formula',
@@ -95,20 +100,26 @@ class Carrier(metaclass=PoolMeta):
     def get_purchase_price(self):
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
+        if not record:
+            return None, None
 
-        if record and record.__name__ == 'purchase.purchase':
-            if not record.carrier:
+        model, id = record.split(',')
+        if model == 'purchase.purchase':
+            Purchase = Pool().get('purchase.purchase')
+            purchase = Purchase(int(id))
+
+            if not purchase.carrier:
                 return price, currency_id
 
             price_payment = 0
-            for payment_type in record.carrier.payment_types:
-                if record.payment_type == payment_type.payment_type:
+            for payment_type in purchase.carrier.payment_types:
+                if purchase.payment_type == payment_type.payment_type:
                     if payment_type.operation == 'fix':
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
                             price_payment = self.compute_formula_payment_price(
-                                    payment_type.formula, record)
+                                    payment_type.formula, purchase)
                         except:
                             self.raise_user_error('error_formula', (
                                     payment_type.formula,))
