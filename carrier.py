@@ -62,25 +62,33 @@ class Carrier(metaclass=PoolMeta):
     def get_sale_price(self):
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
+        model = Transaction().context.get('record_model', None)
+
         if not record:
             return None, None
 
-        model, id = record.split(',')
+        # is an object that not saved (has not id)
+        if isinstance(record, dict):
+            if not model:
+                return price, currency_id
+            record = Pool().get(model)(**record)
+        else:
+            model, id = record.split(',')
+            record = Pool().get(model)(id)
+
         if model == 'sale.sale':
-            Sale = Pool().get('sale.sale')
-            sale = Sale(int(id))
-            if not sale.carrier:
+            if not record.carrier:
                 return price, currency_id
 
             price_payment = 0
-            for payment_type in sale.carrier.payment_types:
-                if sale.payment_type == payment_type.payment_type:
+            for payment_type in record.carrier.payment_types:
+                if record.payment_type == payment_type.payment_type:
                     if payment_type.operation == 'fix':
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
                             price_payment = self.compute_formula_payment_price(
-                                    payment_type.formula, sale)
+                                    payment_type.formula, record)
                         except:
                             raise UserError(gettext(
                                 'carrier_payment_type.rror_formula',
@@ -100,26 +108,33 @@ class Carrier(metaclass=PoolMeta):
     def get_purchase_price(self):
         price, currency_id = super(Carrier, self).get_sale_price()
         record = Transaction().context.get('record', None)
+        model = Transaction().context.get('record_model', None)
+
         if not record:
             return None, None
 
-        model, id = record.split(',')
-        if model == 'purchase.purchase':
-            Purchase = Pool().get('purchase.purchase')
-            purchase = Purchase(int(id))
+        # is an object that not saved (has not id)
+        if isinstance(record, dict):
+            if not model:
+                return price, currency_id
+            record = Pool().get(model)(**record)
+        else:
+            model, id = record.split(',')
+            record = Pool().get(model)(id)
 
-            if not purchase.carrier:
+        if model == 'purchase.purchase':
+            if not record.carrier:
                 return price, currency_id
 
             price_payment = 0
-            for payment_type in purchase.carrier.payment_types:
-                if purchase.payment_type == payment_type.payment_type:
+            for payment_type in record.carrier.payment_types:
+                if record.payment_type == payment_type.payment_type:
                     if payment_type.operation == 'fix':
                         price_payment = payment_type.value
                     elif payment_type.operation == 'formula':
                         try:
                             price_payment = self.compute_formula_payment_price(
-                                    payment_type.formula, purchase)
+                                    payment_type.formula, record)
                         except:
                             self.raise_user_error('error_formula', (
                                     payment_type.formula,))
