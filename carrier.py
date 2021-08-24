@@ -147,5 +147,5 @@ class Carrier(metaclass=PoolMeta):
                         price = price_payment
                     break
 
-        price = self.round_price_formula(price, self.formula_currency_digits)
+        price = self.round_price_formula(price, self.formula_currency.digits)
         return price, currency_id
