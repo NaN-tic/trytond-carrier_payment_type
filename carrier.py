@@ -136,8 +136,8 @@ class Carrier(metaclass=PoolMeta):
                             price_payment = self.compute_formula_payment_price(
                                     payment_type.formula, record)
                         except:
-                            self.raise_user_error('error_formula', (
-                                    payment_type.formula,))
+                            raise UserError(gettext('error_formula',
+                                    formula=payment_type.formula))
                     else:
                         price_payment = price * (1 + payment_type.value / 100)
 
