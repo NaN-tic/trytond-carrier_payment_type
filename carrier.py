@@ -64,19 +64,19 @@ class Carrier(metaclass=PoolMeta):
         record = Transaction().context.get('record', None)
         model = Transaction().context.get('record_model', None)
 
-        if not record:
-            return None, None
-
-        # is an object that not saved (has not id)
-        if isinstance(record, dict):
-            if not model:
-                return price, currency_id
-            record = Pool().get(model)(**record)
-        else:
-            model, id = record.split(',')
-            record = Pool().get(model)(id)
-
         if model == 'sale.sale':
+            if not record:
+                return price, currency_id
+
+            # is an object that not saved (has not id)
+            if isinstance(record, dict):
+                if not model:
+                    return price, currency_id
+                record = Pool().get(model)(**record)
+            elif isinstance(record, str):
+                model, id = record.split(',')
+                record = Pool().get(model)(id)
+
             if not record.carrier:
                 return price, currency_id
 
@@ -102,7 +102,7 @@ class Carrier(metaclass=PoolMeta):
                         price = price_payment
                     break
 
-        price = self.round_price_formula(price, self.formula_currency.digits)
+            price = self.round_price_formula(price, self.formula_currency.digits)
         return price, currency_id
 
     def get_purchase_price(self):
