@@ -4,8 +4,6 @@
 from trytond.pool import PoolMeta
 from trytond.model import fields
 
-__all__ = ['Sale']
-
 
 class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
@@ -14,8 +12,10 @@ class Sale(metaclass=PoolMeta):
     def on_change_lines(self):
         super().on_change_lines()
 
-    def _get_carrier_context(self):
-        context = super(Sale, self)._get_carrier_context()
+    def _get_carrier_context(self, carrier):
+        context = super(Sale, self)._get_carrier_context(carrier)
+        if carrier:
+            self.carrier = carrier
         if self.carrier:
             context = context.copy()
             context['record'] = str(self)
