@@ -14,9 +14,8 @@ class Sale(metaclass=PoolMeta):
 
     def _get_carrier_context(self, carrier):
         context = super(Sale, self)._get_carrier_context(carrier)
+        carrier = carrier or self.carrier
         if carrier:
-            self.carrier = carrier
-        if self.carrier:
             context = context.copy()
             context['record'] = str(self)
         return context
