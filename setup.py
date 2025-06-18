@@ -10,10 +10,10 @@ from configparser import ConfigParser
 MODULE = 'carrier_payment_type'
 PREFIX = 'nantic'
 MODULE2PREFIX = {
-    'carrier_formula',
-    'account_payment_type',
-    'sale_carrier',
-    'sale_payment_type',
+    'carrier_formula': 'nantic',
+    'account_payment_type': 'nantic',
+    'sale_carrier': 'nantic',
+    'sale_payment_type': 'nantic',
 }
 
 
@@ -82,7 +82,7 @@ setup(name='%s_%s' % (PREFIX, MODULE),
         ],
     package_data={
         'trytond.modules.%s' % MODULE: (info.get('xml', [])
-            + ['tryton.cfg', 'locale/*.po', 'tests/*.rst']),
+            + ['tryton.cfg', 'view/*.xml', 'locale/*.po', 'tests/*.rst']),
         },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
