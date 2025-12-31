@@ -64,19 +64,21 @@ class Carrier(metaclass=PoolMeta):
         record = Transaction().context.get('record', None)
         model = Transaction().context.get('record_model', None)
 
-        if model == 'sale.sale':
-            if not record:
+        if not record:
+            return price, currency_id
+
+        # is an object that not saved (has not id)
+        if isinstance(record, dict):
+            if not model:
                 return price, currency_id
+            record = Pool().get(model)(**record)
+        elif isinstance(record, str):
+            record_model, id = record.split(',')
+            if not model:
+                model = record_model
+            record = Pool().get(model)(id)
 
-            # is an object that not saved (has not id)
-            if isinstance(record, dict):
-                if not model:
-                    return price, currency_id
-                record = Pool().get(model)(**record)
-            elif isinstance(record, str):
-                model, id = record.split(',')
-                record = Pool().get(model)(id)
-
+        if model == 'sale.sale':
             if not record.carrier:
                 return price, currency_id
 
@@ -111,7 +113,7 @@ class Carrier(metaclass=PoolMeta):
         model = Transaction().context.get('record_model', None)
 
         if not record:
-            return None, None
+            return price, currency_id
 
         # is an object that not saved (has not id)
         if isinstance(record, dict):
